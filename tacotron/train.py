@@ -204,6 +204,19 @@ def train(log_dir, args, hparams):
 
 					if (checkpoint_state and checkpoint_state.model_checkpoint_path):
 						log('Loading checkpoint {}'.format(checkpoint_state.model_checkpoint_path), slack=True)
+						ckpt = tf.train.load_checkpoint(checkpoint_state.model_checkpoint_path)
+						variables = list(ckpt.get_variable_to_shape_map().keys())
+						#print('=====================PRINTING VARS===============================')
+						#print(variables)
+						#drop_source_layers = ['Tacotron_model/inference/inputs_embedding','Tacotron_model/Tacotron_model/inference/inputs_embedding/Adam_1','Tacotron_model/Tacotron_model/inference/inputs_embedding/Adam']
+						#for v in tf.global_variables():
+						#	if not any(layer in v.op.name for layer in drop_source_layers):
+						#		print('Loading', v.op.name)
+						#		v.load(ckpt.get_tensor(v.op.name), session=sess)
+
+						# Initialize all variables needed for DS, but not loaded from ckpt
+						#init_op = tf.variables_initializer([v for v in tf.global_variables() if any(layer in v.op.name for layer in drop_source_layers)])
+						#sess.run(init_op)
 						saver.restore(sess, checkpoint_state.model_checkpoint_path)
 
 					else:
@@ -229,7 +242,7 @@ def train(log_dir, args, hparams):
 					step, time_window.average, loss, loss_window.average)
 				log(message, end='\r', slack=(step % args.checkpoint_interval == 0))
 
-				if np.isnan(loss) or loss > 100.:
+				if np.isnan(loss):
 					log('Loss exploded to {:.5f} at step {}'.format(loss, step))
 					raise Exception('Loss exploded')
 

@@ -8,8 +8,8 @@ from . import cmudict
 
 _pad        = '_'
 _eos        = '~'
-_characters = 'aábcdeéfghiíjklmnñoópqrstuúüvwxyz!,.:;?¡¿-|\"° '
-
+_characters = 'aábcdeéfghiíjklmnñoópqrstuúüvwxyz!,.:;?¡¿-|\"° AÁBCDEÉFGHIÍJKLMNOÓPQRSTUÚVWYXZ«»°—'
+#-— !,.:?¡¿«»°…
 # Prepend "@" to ARPAbet symbols to ensure uniqueness (some are the same as uppercase letters):
 #_arpabet = ['@' + s for s in cmudict.valid_symbols]
 
